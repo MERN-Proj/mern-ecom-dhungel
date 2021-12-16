@@ -1,26 +1,32 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useState } from 'react';
 import {
   MDBNavbar,
-  MDBNavbarBrand,
   MDBNavbarNav,
   MDBNavItem,
   MDBNavLink,
   MDBNavbarToggler,
   MDBCollapse,
-} from "mdbreact";
+  MDBNavbarBrand,
+  MDBIcon,
+} from 'mdbreact';
+import { useHistory } from 'react-router-dom';
 
 const menus = {
-  home: { name: "Home", path: "/" },
-  login: { name: "Login", path: "/login" },
-  register: { name: "Register", path: "/register" },
-  cart: { name: "Cart", path: "/cart" },
+  home: { name: 'Home', path: '/' },
+  login: { name: 'Login', path: '/login' },
+  register: { name: 'Register', path: '/register' },
+  completeRegistration: {
+    name: 'Complete Registration',
+    path: '/register/complete',
+  },
+  cart: { name: 'Cart', path: '/cart' },
 };
 
-const CustomNavLink = ({ menu, path, current, setCurrent }) => {
+const CustomNavLink = ({ menu, path, current, setCurrent, children }) => {
   return (
-    <MDBNavItem className={menu === current ? "active" : ""}>
+    <MDBNavItem className={menu === current ? 'active' : ''}>
       <MDBNavLink to={path} onClick={() => setCurrent(menu)}>
+        {children}
         {menu}
       </MDBNavLink>
     </MDBNavItem>
@@ -29,7 +35,8 @@ const CustomNavLink = ({ menu, path, current, setCurrent }) => {
 
 export const Nav = () => {
   const [current, setCurrent] = useState(menus.home);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const { home, cart, login, register } = menus;
@@ -46,7 +53,7 @@ export const Nav = () => {
       expand="md"
     >
       <MDBNavbarBrand>
-        <strong className="white-text">Navbar</strong>
+        <strong className="white-text">E-COM</strong>
       </MDBNavbarBrand>
 
       <MDBNavbarToggler onClick={toggleCollapse} />
@@ -58,13 +65,25 @@ export const Nav = () => {
             setCurrent={setCurrent}
             path={home.path}
             menu={home.name}
-          />
+          >
+            <MDBIcon icon="home" className="pr-1" />
+          </CustomNavLink>
           <CustomNavLink
             current={current}
             setCurrent={setCurrent}
             path={cart.path}
             menu={cart.name}
-          />
+          >
+            <MDBIcon icon="shopping-cart" className="pr-1" />
+          </CustomNavLink>
+          <CustomNavLink
+            current={current}
+            setCurrent={setCurrent}
+            path={menus.completeRegistration.path}
+            menu={menus.completeRegistration.name}
+          >
+            <MDBIcon icon="shopping-cart" className="pr-1" />
+          </CustomNavLink>
         </MDBNavbarNav>
 
         <MDBNavbarNav right>
@@ -73,13 +92,17 @@ export const Nav = () => {
             setCurrent={setCurrent}
             path={register.path}
             menu={register.name}
-          />
+          >
+            <MDBIcon icon="user-alt" className="pr-1" />
+          </CustomNavLink>
           <CustomNavLink
             current={current}
             setCurrent={setCurrent}
             path={login.path}
             menu={login.name}
-          />
+          >
+            <MDBIcon icon="sign-in-alt" className="pr-1" />
+          </CustomNavLink>
         </MDBNavbarNav>
       </MDBCollapse>
     </MDBNavbar>

@@ -1,7 +1,8 @@
+import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Home, Login, Register } from "./pages";
-import { Nav } from "./components";
 import { MDBContainer } from "mdbreact";
+import { CompleteRegistration, Home, Login, Register } from "./pages";
+import { Nav } from "./components";
 
 export const App = () => {
   return (
@@ -13,6 +14,11 @@ export const App = () => {
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
+          <Route
+            exact
+            path="/register/complete"
+            component={CompleteRegistration}
+          />
         </Switch>
       </MDBContainer>
     </BrowserRouter>
