@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { signOut } from 'firebase/auth';
+
 import {
   MDBNavbar,
   MDBNavbarNav,
@@ -9,12 +11,17 @@ import {
   MDBNavbarBrand,
   MDBIcon,
 } from 'mdbreact';
+import { auth } from '../../util';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { logOutUser } from '../../state';
 import { useHistory } from 'react-router-dom';
 
 const menus = {
   home: { name: 'Home', path: '/' },
-  login: { name: 'Login', path: '/login' },
-  register: { name: 'Register', path: '/register' },
+  login: { name: 'Sign In', path: '/login' },
+  register: { name: 'Sign Up', path: '/register' },
+  logout: { name: 'Sign Out', path: '/logout' },
   completeRegistration: {
     name: 'Complete Registration',
     path: '/register/complete',
@@ -23,9 +30,28 @@ const menus = {
 };
 
 const CustomNavLink = ({ menu, path, current, setCurrent, children }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  function onClickHandler() {
+    setCurrent(menu);
+
+    if (menu === menus.logout.name) {
+      signOut(auth)
+        .then(() => {
+          dispatch(logOutUser());
+          history.push(menus.login.path);
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error(error.message);
+        });
+    }
+  }
+
   return (
     <MDBNavItem className={menu === current ? 'active' : ''}>
-      <MDBNavLink to={path} onClick={() => setCurrent(menu)}>
+      <MDBNavLink to={path} onClick={onClickHandler}>
         {children}
         {menu}
       </MDBNavLink>
@@ -39,7 +65,7 @@ export const Nav = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const { home, cart, login, register } = menus;
+  const { home, cart, login, register, logout } = menus;
 
   function toggleCollapse() {
     setIsOpen(!isOpen);
@@ -102,6 +128,14 @@ export const Nav = () => {
             menu={login.name}
           >
             <MDBIcon icon="sign-in-alt" className="pr-1" />
+          </CustomNavLink>
+          <CustomNavLink
+            current={current}
+            setCurrent={setCurrent}
+            path={logout.path}
+            menu={logout.name}
+          >
+            <MDBIcon icon="sign-out-alt" className="pr-1" />
           </CustomNavLink>
         </MDBNavbarNav>
       </MDBCollapse>

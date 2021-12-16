@@ -17,14 +17,17 @@ import {
   updatePassword,
 } from 'firebase/auth';
 import { auth } from '../../util';
+// import { useDispatch } from 'react-redux';
+// import { addAuthenticatedUser } from '../../state';
 
 // import "./auth.css";
 
 export const CompleteRegistration = () => {
-  let history = useHistory();
   let [email, setEmail] = useState('');
-
   const [password, setPassword] = useState('password');
+
+  let history = useHistory();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     setEmail(window.localStorage.getItem('emailForSignIn'));
@@ -53,10 +56,19 @@ export const CompleteRegistration = () => {
         .then((currentUser) => {
           updatePassword(currentUser, password).then(() => {
             if (currentUser.emailVerified) {
+              // const payload = {
+              //   email: currentUser.email,
+              //   token: currentUser.accessToken,
+              // };
+              //
+              // dispatch(addAuthenticatedUser(payload));
+              setEmail('');
+              setPassword('');
+
               toast.success('Set Password Successfully');
 
               // redirect to home
-              // history.push('/')
+              history.push('/');
             }
           });
         })

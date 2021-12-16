@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
+import { store } from './state';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
 // import "antd/dist/antd.min.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
@@ -11,10 +14,10 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import './index.css';
 
 ReactDOM.render(
-  <>
+  <Provider store={store}>
     <App />
     <ToastContainer theme="colored" />
-  </>,
+  </Provider>,
   document.getElementById('root'),
 );
 
