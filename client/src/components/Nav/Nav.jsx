@@ -1,62 +1,87 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
-import { Menu } from "antd";
+import { Link, NavLink } from "react-router-dom";
 import {
-  HomeOutlined,
-  LoginOutlined,
-  UserAddOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarNav,
+  MDBNavItem,
+  MDBNavLink,
+  MDBNavbarToggler,
+  MDBCollapse,
+} from "mdbreact";
 
-const { SubMenu, Item } = Menu;
+const menus = {
+  home: { name: "Home", path: "/" },
+  login: { name: "Login", path: "/login" },
+  register: { name: "Register", path: "/register" },
+  cart: { name: "Cart", path: "/cart" },
+};
+
+const CustomNavLink = ({ menu, path, current, setCurrent }) => {
+  return (
+    <MDBNavItem className={menu === current ? "active" : ""}>
+      <MDBNavLink to={path} onClick={() => setCurrent(menu)}>
+        {menu}
+      </MDBNavLink>
+    </MDBNavItem>
+  );
+};
 
 export const Nav = () => {
-  const [current, setCurrent] = useState("home");
+  const [current, setCurrent] = useState(menus.home);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleMenuActive = (e) => {
-    setCurrent(e.key);
-  };
+  const { home, cart, login, register } = menus;
+
+  function toggleCollapse() {
+    setIsOpen(!isOpen);
+  }
 
   return (
-    <Menu
-      onClick={handleMenuActive}
-      selectedKeys={[current]}
-      mode="horizontal"
-      style={{ padding: "0 120px" }}
+    <MDBNavbar
+      className="navbar-padding"
+      color="purple-gradient"
+      dark
+      expand="md"
     >
-      <Item key="home" icon={<HomeOutlined />}>
-        <Link to="/">Home</Link>
-      </Item>
+      <MDBNavbarBrand>
+        <strong className="white-text">Navbar</strong>
+      </MDBNavbarBrand>
 
-      {isLoggedIn && (
-        <SubMenu
-          key="register2"
-          icon={<UserOutlined />}
-          title="UserInfo"
-          style={{ marginLeft: "auto" }}
-        >
-          <Item key="setting:1">Option 1</Item>
-          <Item key="setting:2">Option 2</Item>
-        </SubMenu>
-      )}
+      <MDBNavbarToggler onClick={toggleCollapse} />
 
-      {!isLoggedIn && (
-        <>
-          <Item
-            key="login"
-            icon={<LoginOutlined />}
-            style={{ marginLeft: "auto" }}
-          >
-            <Link to="/login">Login</Link>
-          </Item>
+      <MDBCollapse id="navbarCollapse3" isOpen={isOpen} navbar>
+        <MDBNavbarNav left>
+          <CustomNavLink
+            current={current}
+            setCurrent={setCurrent}
+            path={home.path}
+            menu={home.name}
+          />
+          <CustomNavLink
+            current={current}
+            setCurrent={setCurrent}
+            path={cart.path}
+            menu={cart.name}
+          />
+        </MDBNavbarNav>
 
-          <Item key="register" icon={<UserAddOutlined />}>
-            <Link to="/register">Register</Link>
-          </Item>
-        </>
-      )}
-    </Menu>
+        <MDBNavbarNav right>
+          <CustomNavLink
+            current={current}
+            setCurrent={setCurrent}
+            path={register.path}
+            menu={register.name}
+          />
+          <CustomNavLink
+            current={current}
+            setCurrent={setCurrent}
+            path={login.path}
+            menu={login.name}
+          />
+        </MDBNavbarNav>
+      </MDBCollapse>
+    </MDBNavbar>
   );
 };
