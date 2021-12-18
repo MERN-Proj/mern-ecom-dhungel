@@ -10,12 +10,16 @@ import {
   MDBCollapse,
   MDBNavbarBrand,
   MDBIcon,
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem,
 } from 'mdbreact';
 import { auth } from '../../util';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../../state';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const menus = {
   home: { name: 'Home', path: '/' },
@@ -61,7 +65,9 @@ const CustomNavLink = ({ menu, path, current, setCurrent, children }) => {
 
 export const Nav = () => {
   const [current, setCurrent] = useState(menus.home);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -70,6 +76,63 @@ export const Nav = () => {
   function toggleCollapse() {
     setIsOpen(!isOpen);
   }
+
+  function handleSignOut() {
+    signOut(auth)
+      .then(() => {
+        dispatch(logOutUser());
+        history.push(menus.login.path);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.message);
+      });
+  }
+
+  const logInMenus = (
+    <>
+      <CustomNavLink
+        current={current}
+        setCurrent={setCurrent}
+        path={login.path}
+        menu={login.name}
+      >
+        <MDBIcon icon="sign-in-alt" className="pr-1" />
+      </CustomNavLink>
+      <CustomNavLink
+        current={current}
+        setCurrent={setCurrent}
+        path={register.path}
+        menu={register.name}
+      >
+        <MDBIcon icon="user-alt" className="pr-1" />
+      </CustomNavLink>
+    </>
+  );
+
+  const logOutMenus = (
+    <MDBNavItem className="avatar">
+      <MDBDropdown>
+        <MDBDropdownToggle nav caret>
+          <img
+            src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg"
+            className="rounded-circle z-depth-0"
+            alt="avatar image"
+          />{' '}
+          {user && user.email.split('@')[0]}
+        </MDBDropdownToggle>
+        <MDBDropdownMenu className="dropdown-default" color="primary">
+          <MDBDropdownItem href="#!">Action</MDBDropdownItem>
+          <MDBDropdownItem href="#!">Another Action</MDBDropdownItem>
+          <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+          <MDBDropdownItem divider />
+          <MDBDropdownItem onClick={handleSignOut}>
+            <MDBIcon icon="sign-out-alt" className="pr-1" /> {logout.name}
+          </MDBDropdownItem>
+        </MDBDropdownMenu>
+      </MDBDropdown>
+    </MDBNavItem>
+  );
 
   return (
     <MDBNavbar
@@ -102,42 +165,9 @@ export const Nav = () => {
           >
             <MDBIcon icon="shopping-cart" className="pr-1" />
           </CustomNavLink>
-          <CustomNavLink
-            current={current}
-            setCurrent={setCurrent}
-            path={menus.completeRegistration.path}
-            menu={menus.completeRegistration.name}
-          >
-            <MDBIcon icon="shopping-cart" className="pr-1" />
-          </CustomNavLink>
         </MDBNavbarNav>
 
-        <MDBNavbarNav right>
-          <CustomNavLink
-            current={current}
-            setCurrent={setCurrent}
-            path={register.path}
-            menu={register.name}
-          >
-            <MDBIcon icon="user-alt" className="pr-1" />
-          </CustomNavLink>
-          <CustomNavLink
-            current={current}
-            setCurrent={setCurrent}
-            path={login.path}
-            menu={login.name}
-          >
-            <MDBIcon icon="sign-in-alt" className="pr-1" />
-          </CustomNavLink>
-          <CustomNavLink
-            current={current}
-            setCurrent={setCurrent}
-            path={logout.path}
-            menu={logout.name}
-          >
-            <MDBIcon icon="sign-out-alt" className="pr-1" />
-          </CustomNavLink>
-        </MDBNavbarNav>
+        <MDBNavbarNav right>{user ? logOutMenus : logInMenus}</MDBNavbarNav>
       </MDBCollapse>
     </MDBNavbar>
   );

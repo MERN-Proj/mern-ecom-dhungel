@@ -11,36 +11,38 @@ import {
 } from 'mdbreact';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { sendSignInLinkToEmail } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../util';
 
 // import "./auth.css";
 
-export const Register = () => {
+export const ForgotPassword = () => {
   const [email, setEmail] = useState('mehedi609@gmail.com');
 
   function handleSubmit(e) {
     e.preventDefault();
 
     const actionCodeSettings = {
-      url: process.env.REACT_APP_REGISTER_REDICRECT_URL,
+      url: process.env.REACT_APP_FORGOT_PASSWOR_REDICRECT_URL,
       // This must be true.
       handleCodeInApp: true,
     };
 
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+    sendPasswordResetEmail(auth, email, actionCodeSettings)
       .then(() => {
-        window.localStorage.setItem('emailForSignIn', email);
-        toast.success(
-          `An email is sent to ${email}. Click the link to complete the registration.`,
-        );
+        toast.success(`A password reset link is sent to your email!`);
         setEmail('');
       })
       .catch((error) => {
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        console.error(error);
-        toast.error(error.message);
+        const errorCode = error.code;
+        const errorMessage =
+          errorCode === 'auth/user-not-found'
+            ? 'User with this email not exists!'
+            : error.message;
+        // console.error(error);
+        console.error('code', error.code);
+        console.error('message', error.message);
+        toast.error(errorMessage);
       });
   }
 
@@ -50,7 +52,7 @@ export const Register = () => {
         <MDBCol md="10" className="offset-md-1">
           <MDBCard>
             <h2 className="card-header peach-gradient white-text text-center py-3">
-              <strong>Registration</strong>
+              <strong>Forgot Password</strong>
             </h2>
 
             <MDBCardBody className=" px-5 py-4">
@@ -84,7 +86,7 @@ export const Register = () => {
                   mb="4"
                 >
                   <MDBBtn gradient="peach" type="submit">
-                    Login
+                    Reset Password
                   </MDBBtn>
                 </MDBBox>
                 <hr />

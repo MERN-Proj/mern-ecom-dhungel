@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
 import { userReducer } from './user';
+import { loadingReducer } from './loading';
 
 const reducer = {
   user: userReducer,
+  loading: loadingReducer,
 };
 
 export const store = configureStore({

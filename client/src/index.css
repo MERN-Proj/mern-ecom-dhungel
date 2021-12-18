@@ -1,5 +1,13 @@
-.navbar.navbar-padding {
-  padding: 1rem 15rem;
+@media (min-width: 992px) {
+  .navbar.navbar-padding {
+    padding: 1rem 15rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar.navbar-padding {
+    padding: 1rem 15rem;
+  }
 }
 
 .btn-rounded {
@@ -29,4 +37,39 @@
 .md-form.md-outline :focus:not([readonly]) {
   border-color: #6610f2 !important;
   box-shadow: inset 0 0 0 1px #6610f2 !important;
+}
+
+/* Navbar Avatar*/
+.nav-item.avatar {
+  padding: 0;
+}
+
+.dropdown-toggle img {
+  height: 35px;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+
+.z-depth-0 {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* Navbar dropdown*/
+.navbar .dropdown-menu button {
+  padding: 10px;
+  font-size: 0.9375rem;
+  font-weight: 300;
+}
+
+.navbar .dropdown-menu button:not(.active) {
+  color: #000;
+  background-color: transparent;
 }
