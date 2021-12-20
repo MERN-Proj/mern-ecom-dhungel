@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 import {
   MDBBox,
@@ -21,6 +22,20 @@ import { loadingFinish, loadingStart } from '../../state/loading';
 
 // import "./auth.css";
 
+// const baseUrl = process.env.REACT_APP_API;
+
+const createOrUpdateUser = async (authToken) => {
+  await axios.post(
+    `/create-or-update-user`,
+    {},
+    {
+      headers: {
+        authToken,
+      },
+    },
+  );
+};
+
 export const Login = () => {
   const [email, setEmail] = useState('mehedi609@gmail.com');
   const [password, setPassword] = useState('password');
@@ -31,7 +46,7 @@ export const Login = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.loading);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!email) {
@@ -51,7 +66,60 @@ export const Login = () => {
 
     dispatch(loadingStart());
 
-    signInWithEmailAndPassword(auth, email, password)
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      if (userCredential.user) {
+        const { user } = userCredential;
+        // console.log(user);
+
+        try {
+          const result = await createOrUpdateUser(user.accessToken);
+          console.log(result);
+        } catch (e) {
+          console.log(e);
+        }
+
+        // console.log(user);
+        // const payload = {
+        //   email: currentUser.email,
+        //   token: currentUser.accessToken,
+        // };
+        //
+        // dispatch(addAuthenticatedUser(payload));
+        // setEmail('');
+        // setPassword('');
+
+        toast.success('Logged In Successfully');
+
+        // redirect to home
+        history.push('/');
+      }
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage =
+        errorCode === 'auth/user-not-found' ||
+        errorCode === 'auth/wrong-password'
+          ? 'Invalid Credentials!'
+          : error.message;
+
+      // errorMessage =
+      //   errorCode === 'auth/wrong-password'
+      //     ? 'User with this email not exists!'
+      //     : error.message;
+      console.error(error);
+      // console.error('code', error.code);
+      // console.error('message', error.message);
+      toast.error(errorMessage);
+    } finally {
+      dispatch(loadingFinish());
+    }
+
+    /*signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         if (userCredential.user) {
           // const { user } = userCredential;
@@ -91,7 +159,7 @@ export const Login = () => {
       })
       .finally(() => {
         dispatch(loadingFinish());
-      });
+      });*/
   }
 
   function handleGoogleSignIn() {
