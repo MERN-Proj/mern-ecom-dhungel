@@ -1,13 +1,75 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@media (min-width: 992px) {
+  .navbar.navbar-padding {
+    padding: 1rem 15rem;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@media (min-width: 992px) {
+  .navbar.navbar-padding {
+    padding: 1rem 15rem;
+  }
+}
+
+.btn-rounded {
+  border-radius: 10em;
+}
+
+.btn-gplus {
+  color: #fff;
+  background-color: #dd4b39 !important;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*Custom form */
+.md-form .prefix.active {
+  color: #6610f2 !important;
+}
+
+.md-form.md-outline :focus:not([read-only]) + label {
+  color: #6610f2 !important;
+}
+
+.md-form.md-outline :focus:not([readonly]) {
+  border-color: #6610f2 !important;
+  box-shadow: inset 0 0 0 1px #6610f2 !important;
+}
+
+/* Navbar Avatar*/
+.nav-item.avatar {
+  padding: 0;
+}
+
+.dropdown-toggle img {
+  height: 35px;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+
+.z-depth-0 {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* Navbar dropdown*/
+.navbar .dropdown-menu button {
+  padding: 10px;
+  font-size: 0.9375rem;
+  font-weight: 300;
+}
+
+.navbar .dropdown-menu button:not(.active) {
+  color: #000;
+  background-color: transparent;
 }

@@ -1,25 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
 
-function App() {
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { MDBContainer } from 'mdbreact';
+import {
+  CompleteRegistration,
+  ForgotPassword,
+  Home,
+  Login,
+  Register,
+} from './pages';
+import { Nav } from './components';
+import { useDispatch } from 'react-redux';
+import { auth } from './util';
+import { addAuthenticatedUser } from './state';
+import { ProtectedGuestRoute } from './pages';
+
+export const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const { token } = await user.getIdTokenResult();
+
+        const payload = {
+          email: user.email,
+          token,
+        };
+
+        dispatch(addAuthenticatedUser(payload));
+      } else {
+        // user is sign out
+      }
+    });
+
+    // clean up
+    return () => unsubscribe();
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Nav />
+
+      <MDBContainer className="mt-5">
+        <Switch>
+          <Route exact path="/" component={Home} />
+
+          <ProtectedGuestRoute>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route
+              exact
+              path="/register/complete"
+              component={CompleteRegistration}
+            />
+            <Route exact path="/forgot/password" component={ForgotPassword} />
+          </ProtectedGuestRoute>
+        </Switch>
+      </MDBContainer>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

@@ -1,14 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import { store } from './state';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// import "antd/dist/antd.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
+import 'react-toastify/dist/ReactToastify.min.css';
+import './index.css';
+
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <ToastContainer theme="colored" />
+  </Provider>,
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
